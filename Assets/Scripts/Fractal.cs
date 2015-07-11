@@ -42,7 +42,7 @@ public class Fractal : MonoBehaviour {
 		transform.parent = parent.transform;
 		transform.localScale = Vector3.one * childScale;
 		transform.localPosition = childDirections[childIndex] * (0.5f + 0.5f * childScale);
-		transform.localRotation = childOrientations[childIndex]; // * parent.transform.rotation
+		transform.localRotation = childOrientations[childIndex];
 	}
 
 	private void Start () {
