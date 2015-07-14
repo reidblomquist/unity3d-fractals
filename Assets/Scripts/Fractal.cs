@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Fractal : MonoBehaviour {
 
@@ -10,6 +11,7 @@ public class Fractal : MonoBehaviour {
 
 	private int depth;
 	private Material[,] materials;
+	private static int childCount;
 
 	private static Vector3[] childDirections = {
 		Vector3.up,
@@ -18,6 +20,8 @@ public class Fractal : MonoBehaviour {
 		Vector3.forward,
 		Vector3.back
 	};
+
+	private static int[] childThresholds = new int[childDirections.Length + 1];
 
 	private static Quaternion[] childOrientations = {
 		Quaternion.identity,
@@ -35,6 +39,8 @@ public class Fractal : MonoBehaviour {
 	}
 
 	private void Initialize (Fractal parent, int childIndex) {
+		childCount++;
+		Debug.Log(childCount);
 		mesh = parent.mesh;
 		materials = parent.materials;
 		maxDepth = parent.maxDepth;
@@ -60,12 +66,23 @@ public class Fractal : MonoBehaviour {
 		materials[maxDepth, 1].color = Color.red;
 	}
 
+	private void InitializeThreshholds () {
+		for (int i = 0; i < (childDirections.Length + 1); i++) {
+			if (i == 0) {
+				childThresholds[i] = 1;
+			} else {
+				childThresholds[i] = 5 * childThresholds[i - 1] + 1;
+			}
+		}
+	}
+
 	private void Start () {
 		if (materials == null) {
 			InitializeMaterials();
 		}
 		gameObject.AddComponent<MeshFilter>().mesh = mesh;
 		gameObject.AddComponent<MeshRenderer>().material = materials[depth, Random.Range (0, 2)];
+		InitializeThreshholds();
 		if (depth < maxDepth) {
 			StartCoroutine(CreateChildren());
 		}
