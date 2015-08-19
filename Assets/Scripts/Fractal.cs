@@ -44,6 +44,7 @@ public class Fractal : MonoBehaviour {
 		int index = childThresholds.BinarySearch(childCount);
 		int highest = index < 0 ? ~index : index;
 		int result = childThresholds[highest];
+		tag = result.ToString();
 		mesh = parent.mesh;
 		materials = parent.materials;
 		maxDepth = parent.maxDepth;
@@ -53,6 +54,7 @@ public class Fractal : MonoBehaviour {
 		transform.localScale = Vector3.one * childScale;
 		transform.localPosition = childDirections[childIndex] * (0.5f + 0.5f * childScale);
 		transform.localRotation = childOrientations[childIndex];
+
 	}
 
 	private void InitializeMaterials () {
@@ -72,9 +74,13 @@ public class Fractal : MonoBehaviour {
 	private void InitializeThreshholds () {
 		for (int i = 0; i < (childDirections.Length + 1); i++) {
 			if (i == 0) {
-				childThresholds.Insert(i, 1);
+				int threshold = 1;
+				childThresholds.Insert(i, threshold);
+				TagHelper.AddTag(threshold.ToString());
 			} else {
-				childThresholds.Insert(i, (5 * childThresholds[i - 1] + 1));
+				int threshold = (5 * childThresholds[i - 1] + 1);
+				childThresholds.Insert(i, threshold);
+				TagHelper.AddTag(threshold.ToString());
 			}
 		}
 	}
