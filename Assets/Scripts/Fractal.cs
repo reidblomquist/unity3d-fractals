@@ -53,6 +53,7 @@ public class Fractal : MonoBehaviour
 		tag = depthResult.ToString();
 		Rigidbody sr = this.gameObject.AddComponent<Rigidbody>();
 		sr = parent.GetComponent<Rigidbody>();
+		sr.isKinematic = true;
 		mesh = parent.mesh;
 		materials = parent.materials;
 		maxDepth = parent.maxDepth;
@@ -100,14 +101,26 @@ public class Fractal : MonoBehaviour
 		}
 	}
 
+	private void FollowAtRandom()
+	{
+			GameObject camera = GameObject.FindGameObjectWithTag("MainCamera");
+			CameraFollow newFollow = camera.GetComponent<CameraFollow>();
+			newFollow.target = layerObjects[Random.Range(0, layerObjects.Length)];
+	}
+
 	private void BlowupLayer()
 	{
 		layerObjects = GameObject.FindGameObjectsWithTag(depthResult.ToString());
+//		if (layerObjects.Length > 0)
+//		{
+//			FollowAtRandom();
+//		}
 
 		foreach (GameObject item in layerObjects)
 		{
 			Rigidbody rb = item.GetComponent<Rigidbody>();
 			rb.AddForce(transform.forward * thrust);
+			FollowAtRandom();
 		}
 	}
 
