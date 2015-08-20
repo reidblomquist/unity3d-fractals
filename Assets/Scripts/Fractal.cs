@@ -39,7 +39,7 @@ public class Fractal : MonoBehaviour
 	{
 		for (int i = 0; i < childDirections.Length; i++)
 		{
-			yield return new WaitForSeconds(Random.Range(0.1f, 0.5f));
+			yield return new WaitForSeconds(Random.Range(0.5f, 1.5f));
 			new GameObject("Fractal Child").AddComponent<Fractal>().Initialize(this, i);
 		}
 	}
@@ -54,6 +54,12 @@ public class Fractal : MonoBehaviour
 		Rigidbody sr = this.gameObject.AddComponent<Rigidbody>();
 		sr = parent.GetComponent<Rigidbody>();
 		sr.isKinematic = true;
+		TrailRenderer tr = this.gameObject.AddComponent<TrailRenderer>();
+		TrailRenderer ptr = parent.GetComponent<TrailRenderer>();
+		tr.material = ptr.material;
+		tr.time = ptr.time;
+		tr.startWidth = ptr.startWidth;
+		tr.endWidth = ptr.endWidth;
 		mesh = parent.mesh;
 		materials = parent.materials;
 		maxDepth = parent.maxDepth;
