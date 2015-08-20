@@ -56,9 +56,10 @@ public class Fractal : MonoBehaviour
 		TrailRenderer ptr = parent.GetComponent<TrailRenderer>();
 		TrailRenderer tr = this.gameObject.AddComponent<TrailRenderer>();
 		tr.materials = ptr.materials;
-		tr.material.color = ptr.material.color;
-		sr.isKinematic = true;
+		sr.isKinematic = false;
+		sr.useGravity = false;
 		mesh = parent.mesh;
+		BoxCollider bc = this.gameObject.AddComponent<BoxCollider>();
 		materials = parent.materials;
 		maxDepth = parent.maxDepth;
 		depth = parent.depth + 1;
