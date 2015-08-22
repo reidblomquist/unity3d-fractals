@@ -56,7 +56,7 @@ public class Fractal : MonoBehaviour
 		TrailRenderer ptr = parent.GetComponent<TrailRenderer>();
 		TrailRenderer tr = this.gameObject.AddComponent<TrailRenderer>();
 		tr.materials = ptr.materials;
-		sr.isKinematic = false;
+		sr.isKinematic = true;
 		sr.useGravity = false;
 		mesh = parent.mesh;
 		BoxCollider bc = this.gameObject.AddComponent<BoxCollider>();
@@ -68,7 +68,7 @@ public class Fractal : MonoBehaviour
 		transform.localScale = Vector3.one * childScale;
 		transform.localPosition = childDirections[childIndex] * (0.5f + 0.5f * childScale);
 		transform.localRotation = childOrientations[childIndex];
-
+		sr.AddForce(childDirections[childIndex] * childScale * thrust);
 	}
 
 	private void InitializeMaterials()
@@ -106,16 +106,25 @@ public class Fractal : MonoBehaviour
 		}
 	}
 
+	private void UpdateLayerObjects()
+	{
+		layerObjects = GameObject.FindGameObjectsWithTag(depthResult.ToString());
+	}
+
 	private void FollowAtRandom()
 	{
+		UpdateLayerObjects();
+		if (layerObjects.Length > 0)
+		{
 			GameObject camera = GameObject.FindGameObjectWithTag("MainCamera");
 			CameraFollow newFollow = camera.GetComponent<CameraFollow>();
 			newFollow.target = layerObjects[Random.Range(0, layerObjects.Length)];
+		}
 	}
 
 	private void BlowupLayer()
 	{
-		layerObjects = GameObject.FindGameObjectsWithTag(depthResult.ToString());
+		UpdateLayerObjects();
 //		if (layerObjects.Length > 0)
 //		{
 //			FollowAtRandom();
@@ -141,7 +150,8 @@ public class Fractal : MonoBehaviour
 		}
 		if (childCount == depthResult)
 		{
-			BlowupLayer();
+			FollowAtRandom();
+//			BlowupLayer();
 		}
 
 		gameObject.AddComponent<MeshFilter>().mesh = mesh;
