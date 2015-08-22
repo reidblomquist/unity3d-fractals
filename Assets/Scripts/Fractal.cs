@@ -10,6 +10,7 @@ public class Fractal : MonoBehaviour
 	public int maxDepth;
 	public float childScale;
 	public float thrust;
+	public KeyCode cameraKey;
 
 	private int depth;
 	private Material[,] materials;
@@ -151,7 +152,7 @@ public class Fractal : MonoBehaviour
 		}
 		if (childCount == depthResult)
 		{
-			FollowAtRandom();
+//			FollowAtRandom();
 //			BlowupLayer();
 		}
 
@@ -161,6 +162,13 @@ public class Fractal : MonoBehaviour
 		if (depth < maxDepth)
 		{
 			StartCoroutine(CreateChildren());
+		}
+	}
+	public void Update()
+	{
+		if (Input.GetKeyDown(cameraKey))
+		{
+			FollowAtRandom();
 		}
 	}
 }
