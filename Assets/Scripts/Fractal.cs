@@ -52,23 +52,24 @@ public class Fractal : MonoBehaviour
 		depthResult = childThresholds[highest];
 		tag = depthResult.ToString();
 		Rigidbody sr = this.gameObject.AddComponent<Rigidbody>();
-		sr = parent.GetComponent<Rigidbody>();
 		TrailRenderer ptr = parent.GetComponent<TrailRenderer>();
 		TrailRenderer tr = this.gameObject.AddComponent<TrailRenderer>();
 		tr.materials = ptr.materials;
-		sr.isKinematic = true;
-		sr.useGravity = false;
+		sr.isKinematic = false;
+		sr.useGravity = true;
 		mesh = parent.mesh;
 		BoxCollider bc = this.gameObject.AddComponent<BoxCollider>();
 		materials = parent.materials;
 		maxDepth = parent.maxDepth;
 		depth = parent.depth + 1;
 		childScale = parent.childScale;
+		tr.startWidth = childScale * 4;
+		tr.endWidth = childScale * 2;
 		transform.parent = parent.transform;
 		transform.localScale = Vector3.one * childScale;
 		transform.localPosition = childDirections[childIndex] * (0.5f + 0.5f * childScale);
 		transform.localRotation = childOrientations[childIndex];
-		sr.AddForce(childDirections[childIndex] * childScale * thrust);
+		sr.AddForce(childDirections[childIndex] * 1000, ForceMode.Acceleration);
 	}
 
 	private void InitializeMaterials()
@@ -154,7 +155,7 @@ public class Fractal : MonoBehaviour
 //			BlowupLayer();
 		}
 
-		gameObject.AddComponent<MeshFilter>().mesh = mesh;
+//		gameObject.AddComponent<MeshFilter>().mesh = mesh;
 		gameObject.AddComponent<MeshRenderer>().material = materials[depth, Random.Range(0, 2)];
 
 		if (depth < maxDepth)
