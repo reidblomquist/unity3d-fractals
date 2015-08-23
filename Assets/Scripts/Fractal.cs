@@ -11,12 +11,14 @@ public class Fractal : MonoBehaviour
 	public float childScale;
 	public float thrust;
 	public KeyCode cameraKey;
+	private bool canSpawn = true;
+	private bool spawning;
 
 	private int depth;
 	private Material[,] materials;
 	private static int childCount;
 	private static int depthResult;
-	private GameObject[] layerObjects;
+	private GameObject[] fractalObjects;
 
 	private static Vector3[] childDirections = {
 		Vector3.up,
@@ -48,10 +50,10 @@ public class Fractal : MonoBehaviour
 	private void Initialize(Fractal parent, int childIndex)
 	{
 		childCount++;
-		int index = childThresholds.BinarySearch(childCount);
-		int highest = index < 0 ? ~index : index;
-		depthResult = childThresholds[highest];
-		tag = depthResult.ToString();
+//		int index = childThresholds.BinarySearch(childCount);
+//		int highest = index < 0 ? ~index : index;
+//		depthResult = childThresholds[highest];
+		tag = "Fractal";
 		Rigidbody sr = this.gameObject.AddComponent<Rigidbody>();
 		TrailRenderer ptr = parent.GetComponent<TrailRenderer>();
 		TrailRenderer tr = this.gameObject.AddComponent<TrailRenderer>();
@@ -93,46 +95,36 @@ public class Fractal : MonoBehaviour
 	{
 		for (int i = 0; i < (childDirections.Length + 1); i++)
 		{
-			if (i == 0)
-			{
-				int threshold = 1;
-				childThresholds.Insert(i, threshold);
-				TagHelper.AddTag(threshold.ToString());
-			}
-			else
-			{
-				int threshold = (5 * childThresholds[i - 1] + 1);
-				childThresholds.Insert(i, threshold);
-				TagHelper.AddTag(threshold.ToString());
-			}
+			int threshold = i == 0 ? 1 : (5 * childThresholds[i - 1] + 1);
+			childThresholds.Insert(i, threshold);
 		}
 	}
 
-	private void UpdateLayerObjects()
+	private void UpdateFractalObjects()
 	{
-		layerObjects = GameObject.FindGameObjectsWithTag(depthResult.ToString());
+		fractalObjects = GameObject.FindGameObjectsWithTag("Fractal");
 	}
 
 	private void FollowAtRandom()
 	{
-		UpdateLayerObjects();
-		if (layerObjects.Length > 0)
+		UpdateFractalObjects();
+		if (fractalObjects.Length > 0)
 		{
 			GameObject camera = GameObject.FindGameObjectWithTag("MainCamera");
 			CameraFollow newFollow = camera.GetComponent<CameraFollow>();
-			newFollow.target = layerObjects[Random.Range(0, layerObjects.Length)];
+			newFollow.target = fractalObjects[Random.Range(0, fractalObjects.Length)];
 		}
 	}
 
 	private void BlowupLayer()
 	{
-		UpdateLayerObjects();
+		UpdateFractalObjects();
 //		if (layerObjects.Length > 0)
 //		{
 //			FollowAtRandom();
 //		}
 
-		foreach (GameObject item in layerObjects)
+		foreach (GameObject item in fractalObjects)
 		{
 			Rigidbody rb = item.GetComponent<Rigidbody>();
 			rb.AddForce(transform.forward * thrust);
@@ -150,11 +142,11 @@ public class Fractal : MonoBehaviour
 		{
 			InitializeThreshholds();
 		}
-		if (childCount == depthResult)
-		{
+//		if (childCount == depthResult)
+//		{
 //			FollowAtRandom();
 //			BlowupLayer();
-		}
+//		}
 
 //		gameObject.AddComponent<MeshFilter>().mesh = mesh;
 		gameObject.AddComponent<MeshRenderer>().material = materials[depth, Random.Range(0, 2)];
@@ -166,6 +158,10 @@ public class Fractal : MonoBehaviour
 	}
 	public void Update()
 	{
+		if (spawning == false && canSpawn == false)
+		{
+			Application.LoadLevel(Application.loadedLevel);
+		}
 		if (Input.GetKeyDown(cameraKey))
 		{
 			FollowAtRandom();
