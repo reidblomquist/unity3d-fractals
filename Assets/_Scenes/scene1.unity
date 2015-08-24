@@ -233,8 +233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00b93585f36b04f478eb22e727c7aa98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggerKeyNext: 61
-  triggerKeyPrev: 45
+  restartKey: 32
 --- !u!114 &276970036
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -243,7 +242,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 276970032}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00b93585f36b04f478eb22e727c7aa98, type: 3}
+  m_Script: {fileID: 11500000, guid: d49232887b75ec14f8e0e7aefeb3dcaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   triggerKeyNext: 61
