@@ -21,7 +21,7 @@ public class SimpleGrab : MonoBehaviour {
 
     void TakeScreenshot()
     {
-        Application.CaptureScreenshot(GetScreenshotName(),superSize);
+        ScreenCapture.CaptureScreenshot(GetScreenshotName(),superSize);
         Debug.LogFormat("Captured Screenshot to {0}", GetScreenshotName());
     }
                 
